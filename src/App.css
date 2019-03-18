@@ -1,0 +1,19 @@
+.bar-wrapper {
+	/*pointer-events: none;*/
+}
+
+.gantt .past.bar-wrapper:hover .bar-progress,
+.gantt .past .bar-progress {
+	fill: #FE5F55;
+}
+
+.gantt .closed.bar-wrapper:hover .bar-progress {
+	fill: #82D173;
+}
+.gantt .closed .bar-progress {
+	fill: #92E183;
+}
+
+.gantt .bar-label {
+	font-weight: bolder !important;
+}

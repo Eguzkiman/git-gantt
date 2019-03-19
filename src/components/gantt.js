@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Gantt from 'frappe-gantt';
 
+import moment from 'moment';
+
 export default class MilestoneGant extends Component {
 	componentDidMount () {
 		let tasks = [];
@@ -14,7 +16,7 @@ export default class MilestoneGant extends Component {
 					end: milestone.node.dueOn,
 					url: milestone.node.url,
 					progress: calculateMilestoneProgress(milestone),
-					custom_class: milestone.node.closed ? 'closed' : 'open'
+					custom_class: calculateMilestoneClass(milestone)
 				})
 			});
 		});
@@ -53,4 +55,14 @@ function calculateMilestoneProgress (milestone) {
 		return issue.node.closed ? total += 1 : total
 	}, 0);
 	return (closed / total) * 100;
+}
+
+function calculateMilestoneClass (milestone) {
+	let today = moment();
+	if (milestone.node.closed)
+		return 'closed';
+	if (moment(milestone.node.dueOn).isBefore(today))
+		return 'stale';
+	else
+		return 'open'
 }

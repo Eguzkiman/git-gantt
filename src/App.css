@@ -2,6 +2,7 @@
 	/*pointer-events: none;*/
 }
 
+.gantt .stale.active.bar-wrapper .bar,
 .gantt .stale.bar-wrapper:hover .bar {
 	fill: #FEA5A0;
 }
@@ -9,6 +10,7 @@
 	fill: #FFBFBB;
 }
 
+.gantt .stale.active.bar-wrapper .bar-progress,
 .gantt .stale.bar-wrapper:hover .bar-progress {
 	fill: #FE5F55;
 }
@@ -16,6 +18,7 @@
 	fill: #FE7F77;
 }
 
+.gantt .closed.active.bar-wrapper .bar-progress,
 .gantt .closed.bar-wrapper:hover .bar-progress {
 	fill: #82D173;
 }

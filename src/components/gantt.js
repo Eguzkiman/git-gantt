@@ -12,11 +12,11 @@ export default class MilestoneGant extends Component {
 				tasks.push({
 					id: milestone.node.id,
 					name: repo.node.name + ' | ' + milestone.node.title,
-					start: milestone.node.createdAt,
+					start: getStart(milestone),
 					end: milestone.node.dueOn,
 					url: milestone.node.url,
-					progress: calculateMilestoneProgress(milestone),
-					custom_class: calculateMilestoneClass(milestone)
+					progress: getProgress(milestone),
+					custom_class: calculateMilestoneClass(milestone),
 				})
 			});
 		});
@@ -44,12 +44,27 @@ export default class MilestoneGant extends Component {
 	}
 }
 
+function getStart (milestone) {
+	let validKeys = ['starts', 'start', 'begins'];
+	let lines = milestone.node.description.split('\n');
+
+	for (let i in lines) {
+		let [key, val] = lines[i].split(':');
+
+		if (validKeys.includes(key.trim()) && moment(val.trim()).isValid()) {
+			return moment(val.trim()).toISOString();
+		}
+	};
+
+	return milestone.node.createdAt;
+}
+
 function stopEvent(event) {
 	event.preventDefault();
 	event.stopPropagation();
 }
 
-function calculateMilestoneProgress (milestone) {
+function getProgress (milestone) {
 	let total = milestone.node.issues.edges.length;
 	let closed = milestone.node.issues.edges.reduce((total, issue) => {
 		return issue.node.closed ? total += 1 : total

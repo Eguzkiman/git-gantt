@@ -29,3 +29,17 @@
 .gantt .bar-label {
 	font-weight: bolder !important;
 }
+
+.flex-grid {
+  display: flex;
+}
+.col {
+  flex: 1;
+}
+
+.button-container {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: right;
+}

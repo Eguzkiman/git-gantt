@@ -44,8 +44,8 @@ export default class MilestoneGant extends Component {
 	render () {
 		return (
 			<div id="Gantt">		
-				<button className="square" onClick={() => this.gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Half Day')}>Half Day</button>
+				{/*<button className="square" onClick={() => this.gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
+				<button className="square" onClick={() => this.gantt.change_view_mode('Half Day')}>Half Day</button>*/}
 				<button className="square" onClick={() => this.gantt.change_view_mode('Day')}>Day</button>
 				<button className="square" onClick={() => this.gantt.change_view_mode('Week')}>Week</button>
 				<button className="square" onClick={() => this.gantt.change_view_mode('Month')}>Month</button>			

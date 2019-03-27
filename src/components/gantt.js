@@ -4,6 +4,10 @@ import Gantt from 'frappe-gantt';
 import moment from 'moment';
 
 export default class MilestoneGant extends Component {
+	constructor(props) {
+		super(props);
+		this.gantt = {};
+	}	
 	componentDidMount () {
 		let tasks = [];
 
@@ -22,8 +26,8 @@ export default class MilestoneGant extends Component {
 		});
 
 		const id = '#Gantt';
-		var gantt = new Gantt(id, tasks, {
-			custom_popup_html: () => '',
+		this.gantt = new Gantt(id, tasks, {
+			custom_popup_html: function(){},
 			on_click: task => window.open(task.url),
 			on_view_change: function() {
 				var bars = document.querySelectorAll(id + " .bar-group");
@@ -39,7 +43,13 @@ export default class MilestoneGant extends Component {
 	}
 	render () {
 		return (
-			<div id="Gantt"></div>
+			<div id="Gantt">		
+				<button className="square" onClick={() => this.gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
+				<button className="square" onClick={() => this.gantt.change_view_mode('Half Day')}>Half Day</button>
+				<button className="square" onClick={() => this.gantt.change_view_mode('Day')}>Day</button>
+				<button className="square" onClick={() => this.gantt.change_view_mode('Week')}>Week</button>
+				<button className="square" onClick={() => this.gantt.change_view_mode('Month')}>Month</button>			
+			</div>
 		);
 	}
 }

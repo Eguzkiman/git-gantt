@@ -4,6 +4,7 @@ export const GET_MILESTONES = gql`
 	{
 		viewer {
 			name
+			avatarUrl
 			repositories (first: 100) {
 				edges {
 					node {

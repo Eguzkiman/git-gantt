@@ -1,32 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Gantt from 'frappe-gantt';
 
 import moment from 'moment';
 
-export default class MilestoneGant extends Component {
-	constructor(props) {
-		super(props);
-		this.gantt = {};
-	}	
-	componentDidMount () {
-		let tasks = [];
+export default function MilestoneGantt (props) {
+	let tasks = [];
 
-		this.props.repositories.edges.map(repo => {
-			repo.node.milestones.edges.map(milestone => {
-				tasks.push({
-					id: milestone.node.id,
-					name: repo.node.name + ' | ' + milestone.node.title,
-					start: getStart(milestone),
-					end: milestone.node.dueOn,
-					url: milestone.node.url,
-					progress: getProgress(milestone),
-					custom_class: calculateMilestoneClass(milestone),
-				})
-			});
+	props.repositories.edges.forEach(repo => {
+		repo.node.milestones.edges.forEach(milestone => {
+			tasks.push({
+				id: milestone.node.id,
+				name: repo.node.name + ' | ' + milestone.node.title,
+				start: getStart(milestone),
+				end: milestone.node.dueOn,
+				url: milestone.node.url,
+				progress: getProgress(milestone),
+				custom_class: getClass(milestone),
+			})
 		});
+	});
 
+	if (!tasks.length) return "You have no milestones available!";
+
+	let gantt;
+
+	setTimeout(function () {
 		const id = '#Gantt';
-		this.gantt = new Gantt(id, tasks, {
+		gantt = new Gantt(id, tasks, {
 			custom_popup_html: function(){},
 			on_click: task => window.open(task.url),
 			on_view_change: function() {
@@ -40,18 +40,17 @@ export default class MilestoneGant extends Component {
 				}
 			},
 		});
-	}
-	render () {
-		return (
-			<div id="Gantt">		
-				{/*<button className="square" onClick={() => this.gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Half Day')}>Half Day</button>*/}
-				<button className="square" onClick={() => this.gantt.change_view_mode('Day')}>Day</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Week')}>Week</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Month')}>Month</button>			
-			</div>
-		);
-	}
+	});
+
+	return (
+		<div id="Gantt">		
+			{/*<button className="square" onClick={() => gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Half Day')}>Half Day</button>*/}
+			<button className="square" onClick={() => gantt.change_view_mode('Day')}>Day</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Week')}>Week</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Month')}>Month</button>			
+		</div>
+	);
 }
 
 function getStart (milestone) {
@@ -69,11 +68,6 @@ function getStart (milestone) {
 	return milestone.node.createdAt;
 }
 
-function stopEvent(event) {
-	event.preventDefault();
-	event.stopPropagation();
-}
-
 function getProgress (milestone) {
 	let total = milestone.node.issues.edges.length;
 	let closed = milestone.node.issues.edges.reduce((total, issue) => {
@@ -82,7 +76,7 @@ function getProgress (milestone) {
 	return (closed / total) * 100;
 }
 
-function calculateMilestoneClass (milestone) {
+function getClass (milestone) {
 	let today = moment();
 	if (milestone.node.closed)
 		return 'closed';
@@ -90,4 +84,9 @@ function calculateMilestoneClass (milestone) {
 		return 'stale';
 	else
 		return 'open'
+}
+
+function stopEvent(event) {
+	event.preventDefault();
+	event.stopPropagation();
 }

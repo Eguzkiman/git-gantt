@@ -26,35 +26,6 @@ function App (props) {
 	if (token) return <AuthenticatedView token={token}/>;
 	if (error) return <ErrorView error={error}/>;
 	return <UnauthenticatedView/>;
-
-	// return (
-	// 	<Auth>
-	// 		{({loading, error, data}) => {
-	// 			if (error) return <ErrorView error={error}/>;
-	// 			if (loading) return <LoadingView/>;
-
-	// 			return <p>{JSON.stringify(data)}</p>
-	// 		}}
-	// 	</Auth>
-	// );
-	
-	// let unauthenticatedView = (
-	// 	<div>
-	// 		<AuthProvider>
-	// 			{view}
-	// 		</AuthProvider>
-	// 		<Navbar/>
-	// 		<p>authenticating...</p>
-	// 	</div>
-	// );
-
-	// let view = isAuthenticating ? unauthenticatedView : authenticatedView;
-
-	// return (
-	// 	<div className="App">
-	// 		{view}
-	// 	</div>
-	// );
 }
 
 let UnauthenticatedView = () => (
@@ -80,7 +51,12 @@ let AuthenticatedView = (props) => {
 	return (
 		<Query query={GET_MILESTONES} context={context}>
 			{({ loading, error, data }) => {
-				if (loading) return <p>Loading...</p>;
+				if (loading) return (
+					<div>
+						<Navbar/>
+						<p>Loading...</p>
+					</div>
+				);
 
 				if (error) return (
 					<div>

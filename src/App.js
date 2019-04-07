@@ -12,20 +12,15 @@ import {
 } from './queries';
 
 function App (props) {
-	
-	let [error, setError] = useState(null);
-	let [token, setToken] = useState(null);
 
-	useEffect(() => {
-		let tox = getTokenFromUrl();
-		if (!tox) tox = getTokenFromLocalStorage();
-
-		setToken(tox);
-	}, []);
-
-	if (token) return <AuthenticatedView token={token}/>;
-	if (error) return <ErrorView error={error}/>;
-	return <UnauthenticatedView/>;
+	return (
+		<Auth>
+			{({token}) => {
+				if (token)return <AuthenticatedView token={token}/>;
+				return <UnauthenticatedView/>;
+			}}
+		</Auth>
+	);
 }
 
 let UnauthenticatedView = () => (
@@ -77,17 +72,6 @@ let AuthenticatedView = (props) => {
 			}}
 		</Query>
 	);
-}
-
-function getTokenFromLocalStorage () {
-	return null;
-}
-
-function getTokenFromUrl () {
-	let usp = new URLSearchParams(window.location.search)
-	let access_token = usp.get('access_token');
-
-	return access_token;
 }
 
 export default App;

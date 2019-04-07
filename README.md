@@ -22,11 +22,13 @@ installing dependencies:
 
 and running the project with your GitHub's account personal token as an evironment variable:
 
-and running the proyect with the GitGantt's GitHub client_id as an environment variable:
+
+`REACT_APP_GITHUB_TOKEN=<your-personal-access-token-here> yarn start`
+
+Alternatively, you can run it with GitGantt's client id, if you have access to it:
 
 `REACT_APP_CLIENT_ID=<gitgantt-client-id-here> yarn start`
 
-The current client_id is the following: `14de362467e571d25b4f`
 
 You can build & deploy GitGantt as any [Create React App](https://github.com/facebook/create-react-app) application.
 

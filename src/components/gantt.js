@@ -2,6 +2,8 @@ import React from 'react';
 import Gantt from 'frappe-gantt';
 
 import moment from 'moment';
+import tippy from 'tippy.js';
+import 'tippy.js/themes/light.css'
 
 export default function MilestoneGantt (props) {
 	let tasks = [];
@@ -9,26 +11,27 @@ export default function MilestoneGantt (props) {
 	props.repositories.edges.forEach(repo => {
 		repo.node.milestones.edges.forEach(milestone => {
 			tasks.push({
-				id: milestone.node.id,
+				id: getId(milestone),
 				name: repo.node.name + ' | ' + milestone.node.title,
 				start: getStart(milestone),
 				end: milestone.node.dueOn,
 				url: milestone.node.url,
 				progress: getProgress(milestone),
 				custom_class: getClass(milestone),
+				description: getDescription(milestone)
 			})
 		});
 	});
 
-	if (!tasks.length) return "You have no milestones available!";
+	if (!tasks.length) return (<p>You have no milestones available!</p>);
 
 	let gantt;
 
 	setTimeout(function () {
 		const id = '#Gantt';
 		gantt = new Gantt(id, tasks, {
-			custom_popup_html: function(){},
-			on_click: task => window.open(task.url),
+			custom_popup_html: () => '',
+			// on_click: task => window.open(task.url),
 			on_view_change: function() {
 				var bars = document.querySelectorAll(id + " .bar-group");
 				for (let i = 0; i < bars.length; i++) {
@@ -40,10 +43,20 @@ export default function MilestoneGantt (props) {
 				}
 			},
 		});
+
+		tasks.forEach(task => {
+			tippy(`.${task.id}`, {
+				content: makeCardTemplate(task),
+				animateFill: false,
+				theme: 'light',
+				interactive: true
+			});
+		})
+
 	});
 
 	return (
-		<div id="Gantt">		
+		<div id="Gantt">
 			{/*<button className="square" onClick={() => gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
 			<button className="square" onClick={() => gantt.change_view_mode('Half Day')}>Half Day</button>*/}
 			<button className="square" onClick={() => gantt.change_view_mode('Day')}>Day</button>
@@ -68,6 +81,19 @@ function getStart (milestone) {
 	return milestone.node.createdAt;
 }
 
+function makeCardTemplate (data) {
+	return`
+		<div class="milestone-tippy">
+			<h3>${data.name}</h3>
+			<p>${data.description || 'No description available'}</p>
+			<p>
+				from ${moment(data.start).format('MMMM Do')}
+				to ${moment(data.end).format('MMMM Do')}
+			</p>
+		</div>
+	`;
+}
+
 function getProgress (milestone) {
 	let total = milestone.node.issues.edges.length;
 	let closed = milestone.node.issues.edges.reduce((total, issue) => {
@@ -78,12 +104,23 @@ function getProgress (milestone) {
 
 function getClass (milestone) {
 	let today = moment();
+	let colorClass;
 	if (milestone.node.closed)
-		return 'closed';
-	if (moment(milestone.node.dueOn).isBefore(today))
-		return 'stale';
+		colorClass = 'closed';
+	else if (moment(milestone.node.dueOn).isBefore(today))
+		colorClass = 'stale';
 	else
-		return 'open'
+		colorClass = 'open';
+
+	return `${colorClass} ${milestone.node.id}`
+}
+
+function getDescription (milestone) {
+	return milestone.node.description.split('\n').filter(line => !line.includes('starts')).join(' ');
+}
+
+function getId (milestone) {
+	return String(milestone.node.id).replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')
 }
 
 function stopEvent(event) {

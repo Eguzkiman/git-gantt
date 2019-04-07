@@ -65,3 +65,12 @@ button:focus {outline:0;}
 	border-radius: 5px;
 	margin: 15px;
 }
+
+.gantt-container .popup-wrapper {
+	display: none;
+}
+
+.milestone-tippy {
+	overflow: hidden;
+	text-align: left;
+}

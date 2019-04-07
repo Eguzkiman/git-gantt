@@ -31,7 +31,7 @@ export default function MilestoneGantt (props) {
 		const id = '#Gantt';
 		gantt = new Gantt(id, tasks, {
 			custom_popup_html: () => '',
-			// on_click: task => window.open(task.url),
+			on_click: task => window.open(task.url),
 			on_view_change: function() {
 				var bars = document.querySelectorAll(id + " .bar-group");
 				for (let i = 0; i < bars.length; i++) {

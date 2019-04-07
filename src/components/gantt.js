@@ -35,8 +35,9 @@ export default function MilestoneGantt (props) {
 			on_click: task => window.open(task.url),
 			on_date_change: (task, start, end) => {
 				console.log(task, start, end)
-			}
-			// on_view_change: function() {
+			},
+			on_view_change: function() {
+				setTooltips(tasks);
 			// 	var bars = document.querySelectorAll(id + " .bar-group");
 			// 	for (let i = 0; i < bars.length; i++) {
 			// 		bars[i].addEventListener("mousedown", stopEvent, true);
@@ -45,18 +46,10 @@ export default function MilestoneGantt (props) {
 			// 	for (let i = 0; i < handles.length; i++) {
 			// 		handles[i].remove();
 			// 	}
-			// },
+			},
 		});
 
-		tasks.forEach(task => {
-			tippy(`.${task.id}`, {
-				content: makeCardTemplate(task),
-				animateFill: false,
-				theme: 'light',
-				interactive: true
-			});
-		})
-
+		setTooltips(tasks);
 	});
 
 	return (
@@ -154,6 +147,17 @@ function getDescription (milestone) {
 
 function getId (milestone) {
 	return String(milestone.node.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
+}
+
+function setTooltips (tasks) {
+	tasks.forEach(task => {
+		tippy(`.${task.id}`, {
+			content: makeCardTemplate(task),
+			animateFill: false,
+			theme: 'light',
+			interactive: true
+		});
+	});
 }
 
 // function stopEvent(event) {

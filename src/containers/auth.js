@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import fetcher from 'fetcher';
-
 export default function Auth (props) {
 
-	const initialToken = getTokenFromLocalStorage();
-
-	let [error, setError] = useState(null);
 	let [token, setToken] = useState(null);
 
 	useEffect(() => {
@@ -17,7 +12,7 @@ export default function Auth (props) {
 		setToken(tox);
 	}, []);
 
-	return props.children({ error, token });
+	return props.children(token);
 }
 
 function getTokenFromEnv() {

@@ -18,7 +18,8 @@ export default function MilestoneGantt (props) {
 				url: milestone.node.url,
 				progress: getProgress(milestone),
 				custom_class: getClass(milestone),
-				description: getDescription(milestone)
+				description: getDescription(milestone),
+				assignees: getAssignees(milestone)
 			})
 		});
 	});
@@ -90,6 +91,16 @@ function makeCardTemplate (data) {
 				from ${moment(data.start).format('MMMM Do')}
 				to ${moment(data.end).format('MMMM Do')}
 			</p>
+			<h4>Assignees</h4>
+			${data.assignees.length
+				? data.assignees.map(assignee => (
+					`<div class="v-center">
+						<img class='small-avatar' src=${assignee.avatarUrl}/>
+						<span>${assignee.name || assignee.login}</span>
+					</div>`
+				)).join('')
+				: `<p>No asignees available</p>`
+			}
 		</div>
 	`;
 }
@@ -100,6 +111,25 @@ function getProgress (milestone) {
 		return issue.node.closed ? total += 1 : total
 	}, 0);
 	return (closed / total) * 100;
+}
+
+function getAssignees (milestone) {
+	let assignees = [];
+	let ids = new Map();
+
+	milestone.node.issues.edges.forEach(issue => {
+		issue.node.assignees.edges.forEach(assignee => {
+			let id = assignee.node.id; 
+			if (!ids.has(id)) {
+				ids.set(id, true);
+				assignees.push(assignee.node);
+			}
+		});
+	});
+
+
+
+	return assignees;
 }
 
 function getClass (milestone) {
@@ -120,7 +150,7 @@ function getDescription (milestone) {
 }
 
 function getId (milestone) {
-	return String(milestone.node.id).replace(/([ #;&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1')
+	return String(milestone.node.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
 }
 
 function stopEvent(event) {

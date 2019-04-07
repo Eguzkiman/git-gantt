@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 
 import { Query } from "react-apollo";
@@ -15,8 +15,8 @@ function App (props) {
 
 	return (
 		<Auth>
-			{({token}) => {
-				if (token)return <AuthenticatedView token={token}/>;
+			{(token) => {
+				if (token) return <AuthenticatedView token={token}/>;
 				return <UnauthenticatedView/>;
 			}}
 		</Auth>
@@ -27,13 +27,6 @@ let UnauthenticatedView = () => (
 	<div>
 		<Navbar/>
 		<p>Sign in to continue</p>
-	</div>
-);
-
-let ErrorView = (props) => (
-	<div>
-		<Navbar/>
-		<p>Error! {props.error}</p>
 	</div>
 );
 

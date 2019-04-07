@@ -33,16 +33,19 @@ export default function MilestoneGantt (props) {
 		gantt = new Gantt(id, tasks, {
 			custom_popup_html: () => '',
 			on_click: task => window.open(task.url),
-			on_view_change: function() {
-				var bars = document.querySelectorAll(id + " .bar-group");
-				for (let i = 0; i < bars.length; i++) {
-					bars[i].addEventListener("mousedown", stopEvent, true);
-				}
-				var handles = document.querySelectorAll(id + " .handle-group");
-				for (let i = 0; i < handles.length; i++) {
-					handles[i].remove();
-				}
-			},
+			on_date_change: (task, start, end) => {
+				console.log(task, start, end)
+			}
+			// on_view_change: function() {
+			// 	var bars = document.querySelectorAll(id + " .bar-group");
+			// 	for (let i = 0; i < bars.length; i++) {
+			// 		bars[i].addEventListener("mousedown", stopEvent, true);
+			// 	}
+			// 	var handles = document.querySelectorAll(id + " .handle-group");
+			// 	for (let i = 0; i < handles.length; i++) {
+			// 		handles[i].remove();
+			// 	}
+			// },
 		});
 
 		tasks.forEach(task => {
@@ -153,7 +156,7 @@ function getId (milestone) {
 	return String(milestone.node.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
 }
 
-function stopEvent(event) {
-	event.preventDefault();
-	event.stopPropagation();
-}
+// function stopEvent(event) {
+// 	event.preventDefault();
+// 	event.stopPropagation();
+// }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 
 import { Query } from "react-apollo";
@@ -12,62 +12,21 @@ import {
 } from './queries';
 
 function App (props) {
-	
-	let [error, setError] = useState(null);
-	let [token, setToken] = useState(null);
 
-	useEffect(() => {
-		let tox = getTokenFromUrl();
-		if (!tox) tox = getTokenFromLocalStorage();
-
-		setToken(tox);
-	}, []);
-
-	if (token) return <AuthenticatedView token={token}/>;
-	if (error) return <ErrorView error={error}/>;
-	return <UnauthenticatedView/>;
-
-	// return (
-	// 	<Auth>
-	// 		{({loading, error, data}) => {
-	// 			if (error) return <ErrorView error={error}/>;
-	// 			if (loading) return <LoadingView/>;
-
-	// 			return <p>{JSON.stringify(data)}</p>
-	// 		}}
-	// 	</Auth>
-	// );
-	
-	// let unauthenticatedView = (
-	// 	<div>
-	// 		<AuthProvider>
-	// 			{view}
-	// 		</AuthProvider>
-	// 		<Navbar/>
-	// 		<p>authenticating...</p>
-	// 	</div>
-	// );
-
-	// let view = isAuthenticating ? unauthenticatedView : authenticatedView;
-
-	// return (
-	// 	<div className="App">
-	// 		{view}
-	// 	</div>
-	// );
+	return (
+		<Auth>
+			{(token) => {
+				if (token) return <AuthenticatedView token={token}/>;
+				return <UnauthenticatedView/>;
+			}}
+		</Auth>
+	);
 }
 
 let UnauthenticatedView = () => (
 	<div>
 		<Navbar/>
 		<p>Sign in to continue</p>
-	</div>
-);
-
-let ErrorView = (props) => (
-	<div>
-		<Navbar/>
-		<p>Error! {props.error}</p>
 	</div>
 );
 
@@ -80,7 +39,12 @@ let AuthenticatedView = (props) => {
 	return (
 		<Query query={GET_MILESTONES} context={context}>
 			{({ loading, error, data }) => {
-				if (loading) return <p>Loading...</p>;
+				if (loading) return (
+					<div>
+						<Navbar/>
+						<p>Loading...</p>
+					</div>
+				);
 
 				if (error) return (
 					<div>
@@ -101,17 +65,6 @@ let AuthenticatedView = (props) => {
 			}}
 		</Query>
 	);
-}
-
-function getTokenFromLocalStorage () {
-	return null;
-}
-
-function getTokenFromUrl () {
-	let usp = new URLSearchParams(window.location.search)
-	let access_token = usp.get('access_token');
-
-	return access_token;
 }
 
 export default App;

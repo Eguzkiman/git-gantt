@@ -1,49 +1,30 @@
-import React, { useState, useEffect } from 'react';
-
-import fetcher from 'fetcher';
+import { useState, useEffect } from 'react';
 
 export default function Auth (props) {
 
-	const initialToken = getTokenFromLocalStorage();
-
-	let [loading, setLoading] = useState(true);
-	let [error, setError] = useState(null);
-	let [data, setData] = useState({});
+	let [token, setToken] = useState(null);
 
 	useEffect(() => {
-		if (!initialToken) {
-			setLoading(true);
-			let code = getCodeFromUrl();
-			let redirectUri = window.location.host;
-			
-			fetcher.getGithubAccessToken(code)
-				.then(res => {
-					let data = res.data;
-					if (data.access_token)
-						setData(data);
-					else
-						setError('Unable to fetch token');
-				})
-				.catch(err => {
-					setError(String(err));
-					throw err;
-				})
-				.finally(() => {
-					setLoading(false);
-				});
-		}
+		let tox = getTokenFromEnv();
+		if (!tox) tox = getTokenFromUrl();
+		if (!tox) tox = getTokenFromLocalStorage();
+
+		setToken(tox);
 	}, []);
 
-	return props.children({ error, loading, data });
+	return props.children(token);
 }
 
+function getTokenFromEnv() {
+	return process.env.REACT_APP_GITHUB_TOKEN
+}
+
+function getTokenFromUrl () {
+	let usp = new URLSearchParams(window.location.search)
+	let access_token = usp.get('access_token');
+
+	return access_token;
+}
 function getTokenFromLocalStorage () {
 	return null;
-}
-
-function getCodeFromUrl () {
-	let usp = new URLSearchParams(window.location.search)
-	let code = usp.get('code');
-
-	return code;
 }

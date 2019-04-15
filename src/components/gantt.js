@@ -1,57 +1,66 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Gantt from 'frappe-gantt';
 
 import moment from 'moment';
+import tippy from 'tippy.js';
+import 'tippy.js/themes/light.css'
 
-export default class MilestoneGant extends Component {
-	constructor(props) {
-		super(props);
-		this.gantt = {};
-	}	
-	componentDidMount () {
-		let tasks = [];
+export default function MilestoneGantt (props) {
+	let tasks = [];
 
-		this.props.repositories.edges.map(repo => {
-			repo.node.milestones.edges.map(milestone => {
-				tasks.push({
-					id: milestone.node.id,
-					name: repo.node.name + ' | ' + milestone.node.title,
-					start: getStart(milestone),
-					end: milestone.node.dueOn,
-					url: milestone.node.url,
-					progress: getProgress(milestone),
-					custom_class: calculateMilestoneClass(milestone),
-				})
-			});
+	props.repositories.edges.forEach(repo => {
+		repo.node.milestones.edges.forEach(milestone => {
+			tasks.push({
+				id: getId(milestone),
+				name: repo.node.name + ' | ' + milestone.node.title,
+				start: getStart(milestone),
+				end: milestone.node.dueOn,
+				url: milestone.node.url,
+				progress: getProgress(milestone),
+				custom_class: getClass(milestone),
+				description: getDescription(milestone),
+				assignees: getAssignees(milestone)
+			})
 		});
+	});
 
+	if (!tasks.length) return (<p>You have no milestones available!</p>);
+
+	let gantt;
+
+	setTimeout(function () {
 		const id = '#Gantt';
-		this.gantt = new Gantt(id, tasks, {
-			custom_popup_html: function(){},
+		gantt = new Gantt(id, tasks, {
+			custom_popup_html: () => '',
 			on_click: task => window.open(task.url),
+			on_date_change: (task, start, end) => {
+				console.log(task, start, end)
+			},
 			on_view_change: function() {
-				var bars = document.querySelectorAll(id + " .bar-group");
-				for (let i = 0; i < bars.length; i++) {
-					bars[i].addEventListener("mousedown", stopEvent, true);
-				}
-				var handles = document.querySelectorAll(id + " .handle-group");
-				for (let i = 0; i < handles.length; i++) {
-					handles[i].remove();
-				}
+				setTooltips(tasks);
+			// 	var bars = document.querySelectorAll(id + " .bar-group");
+			// 	for (let i = 0; i < bars.length; i++) {
+			// 		bars[i].addEventListener("mousedown", stopEvent, true);
+			// 	}
+			// 	var handles = document.querySelectorAll(id + " .handle-group");
+			// 	for (let i = 0; i < handles.length; i++) {
+			// 		handles[i].remove();
+			// 	}
 			},
 		});
-	}
-	render () {
-		return (
-			<div id="Gantt">		
-				{/*<button className="square" onClick={() => this.gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Half Day')}>Half Day</button>*/}
-				<button className="square" onClick={() => this.gantt.change_view_mode('Day')}>Day</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Week')}>Week</button>
-				<button className="square" onClick={() => this.gantt.change_view_mode('Month')}>Month</button>			
-			</div>
-		);
-	}
+
+		setTooltips(tasks);
+	});
+
+	return (
+		<div id="Gantt">
+			{/*<button className="square" onClick={() => gantt.change_view_mode('Quarter Day')}>Quarter Day</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Half Day')}>Half Day</button>*/}
+			<button className="square" onClick={() => gantt.change_view_mode('Day')}>Day</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Week')}>Week</button>
+			<button className="square" onClick={() => gantt.change_view_mode('Month')}>Month</button>			
+		</div>
+	);
 }
 
 function getStart (milestone) {
@@ -69,9 +78,27 @@ function getStart (milestone) {
 	return milestone.node.createdAt;
 }
 
-function stopEvent(event) {
-	event.preventDefault();
-	event.stopPropagation();
+function makeCardTemplate (data) {
+	return`
+		<div class="milestone-tippy">
+			<h3>${data.name}</h3>
+			<p>${data.description || 'No description available'}</p>
+			<p>
+				from ${moment(data.start).format('MMMM Do')}
+				to ${moment(data.end).format('MMMM Do')}
+			</p>
+			<h4>Assignees</h4>
+			${data.assignees.length
+				? data.assignees.map(assignee => (
+					`<div class="v-center">
+						<img class='small-avatar' src=${assignee.avatarUrl}/>
+						<span>${assignee.name || assignee.login}</span>
+					</div>`
+				)).join('')
+				: `<p>No asignees available</p>`
+			}
+		</div>
+	`;
 }
 
 function getProgress (milestone) {
@@ -82,12 +109,58 @@ function getProgress (milestone) {
 	return (closed / total) * 100;
 }
 
-function calculateMilestoneClass (milestone) {
-	let today = moment();
-	if (milestone.node.closed)
-		return 'closed';
-	if (moment(milestone.node.dueOn).isBefore(today))
-		return 'stale';
-	else
-		return 'open'
+function getAssignees (milestone) {
+	let assignees = [];
+	let ids = new Map();
+
+	milestone.node.issues.edges.forEach(issue => {
+		issue.node.assignees.edges.forEach(assignee => {
+			let id = assignee.node.id; 
+			if (!ids.has(id)) {
+				ids.set(id, true);
+				assignees.push(assignee.node);
+			}
+		});
+	});
+
+
+
+	return assignees;
 }
+
+function getClass (milestone) {
+	let today = moment();
+	let colorClass;
+	if (milestone.node.closed)
+		colorClass = 'closed';
+	else if (moment(milestone.node.dueOn).isBefore(today))
+		colorClass = 'stale';
+	else
+		colorClass = 'open';
+
+	return `${colorClass} ${milestone.node.id}`
+}
+
+function getDescription (milestone) {
+	return milestone.node.description.split('\n').filter(line => !line.includes('starts')).join(' ');
+}
+
+function getId (milestone) {
+	return String(milestone.node.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
+}
+
+function setTooltips (tasks) {
+	tasks.forEach(task => {
+		tippy(`.${task.id}`, {
+			content: makeCardTemplate(task),
+			animateFill: false,
+			theme: 'light',
+			interactive: true
+		});
+	});
+}
+
+// function stopEvent(event) {
+// 	event.preventDefault();
+// 	event.stopPropagation();
+// }

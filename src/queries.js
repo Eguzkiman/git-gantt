@@ -2,9 +2,17 @@ import gql from "graphql-tag";
 
 export const GET_MILESTONES = gql`
 	{
+		rateLimit {
+			limit
+			cost
+			remaining
+			resetAt
+		}
 		viewer {
 			name
-			repositories (first: 100) {
+			login
+			avatarUrl
+			repositories(first: 50) {
 				edges {
 					node {
 						id
@@ -19,15 +27,24 @@ export const GET_MILESTONES = gql`
 									description
 									url
 									closed
-									issues(first:100) {
+									issues(first: 20) {
 										edges {
 											node {
 												id
 												title
 												closed
+												assignees(first:5) {
+													edges {
+														node {
+															id
+															name
+															login
+															avatarUrl
+														}
+													}
+												}
 											}
 										}
-
 									}
 								}
 							}
@@ -37,4 +54,5 @@ export const GET_MILESTONES = gql`
 			}
 		}
 	}
+
 `;

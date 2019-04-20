@@ -2,11 +2,16 @@ import axios from 'axios';
 
 const GITHUB_HOST = "https://api.github.com";
 
-export default axios.create();
+// Axios instance for GitHub
+const ghAxios = axios.create({
+	baseURL: GITHUB_HOST
+});
 
 export const getAllRepos = () => 
-	axios(`${GITHUB_HOST}/user/repos`);
+	ghAxios(`/user/repos`);
 
 
 export const getMilestonesByRepo = (params) => 
-	axios(`${GITHUB_HOST}/repos/${params.owner.login}/${params.name}/milestones`)
+	ghAxios(`/repos/${params.owner.login}/${params.name}/milestones`)
+
+export default ghAxios;

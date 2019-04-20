@@ -13,10 +13,6 @@ import {
 
 export default function Home (props) {
 
-	// context.headers = {
-	// 	Authorization: `Bearer ${props.token}`
-	// }
-
 	async function getData () {
 		let repos = await getAllRepos();
 		let milestonesByRepo = await Promise.all(repos.data.map(repo => getMilestonesByRepo(repo)));

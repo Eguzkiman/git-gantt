@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import fetcher from 'fetcher';
 
 export default function Auth (props) {
 
@@ -10,6 +11,7 @@ export default function Auth (props) {
 		if (!tox) tox = getTokenFromLocalStorage();
 
 		setToken(tox);
+		fetcher.defaults.headers['Authorization'] = `Bearer ${tox}`;
 	}, []);
 
 	return props.children(token);

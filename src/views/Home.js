@@ -7,23 +7,20 @@ import Query from "containers/query";
 import flattenArray from 'utils/flatten-array';
 
 import {
-	context,
 	getAllRepos,
 	getMilestonesByRepo
 } from 'fetcher';
 
 export default function Home (props) {
 
-	context.headers = {
-		Authorization: `Bearer ${props.token}`
-	}
+	// context.headers = {
+	// 	Authorization: `Bearer ${props.token}`
+	// }
 
 	async function getData () {
 		let repos = await getAllRepos();
 		let milestonesByRepo = await Promise.all(repos.data.map(repo => getMilestonesByRepo(repo)));
-		// console.log(milestonesByRepo)
 		let milestones = flattenArray(milestonesByRepo.map(i => i.data));
-		console.log(milestones)
 		return milestones
 	}
 

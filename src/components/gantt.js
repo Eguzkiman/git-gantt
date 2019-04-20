@@ -8,22 +8,21 @@ import 'tippy.js/themes/light.css'
 export default function MilestoneGantt (props) {
 	let tasks = [];
 
-	props.repositories.edges.forEach(repo => {
-		repo.node.milestones.edges.forEach(milestone => {
+	// props.repositories.forEach(repo => {
+		props.data.forEach(milestone => {
 			tasks.push({
 				id: getId(milestone),
-				name: repo.node.name + ' | ' + milestone.node.title,
+				name: /*repo.node.name + ' | ' +*/ milestone.title,
 				start: getStart(milestone),
-				end: milestone.node.dueOn,
-				url: milestone.node.url,
+				end: milestone.due_on,
+				url: milestone.url,
 				progress: getProgress(milestone),
 				custom_class: getClass(milestone),
 				description: getDescription(milestone),
 				assignees: getAssignees(milestone)
 			})
 		});
-	});
-
+	// });
 	if (!tasks.length) return (<p>You have no milestones available!</p>);
 
 	let gantt;
@@ -34,7 +33,6 @@ export default function MilestoneGantt (props) {
 			custom_popup_html: () => '',
 			on_click: task => window.open(task.url),
 			on_date_change: (task, start, end) => {
-				console.log(task, start, end)
 			},
 			on_view_change: function() {
 				setTooltips(tasks);
@@ -65,7 +63,7 @@ export default function MilestoneGantt (props) {
 
 function getStart (milestone) {
 	let validKeys = ['starts', 'start', 'begins'];
-	let lines = milestone.node.description.split('\n');
+	let lines = milestone.description.split('\n');
 
 	for (let i in lines) {
 		let [key, val] = lines[i].split(':');
@@ -75,7 +73,7 @@ function getStart (milestone) {
 		}
 	};
 
-	return milestone.node.createdAt;
+	return milestone.created_at;
 }
 
 function makeCardTemplate (data) {
@@ -91,7 +89,7 @@ function makeCardTemplate (data) {
 			${data.assignees.length
 				? data.assignees.map(assignee => (
 					`<div class="v-center">
-						<img class='small-avatar' src=${assignee.avatarUrl}/>
+						<img class='small-avatar' src=${assignee.avatar_url}/>
 						<span>${assignee.name || assignee.login}</span>
 					</div>`
 				)).join('')
@@ -101,27 +99,28 @@ function makeCardTemplate (data) {
 	`;
 }
 
-function getProgress (milestone) {
-	let total = milestone.node.issues.edges.length;
-	let closed = milestone.node.issues.edges.reduce((total, issue) => {
-		return issue.node.closed ? total += 1 : total
-	}, 0);
-	return (closed / total) * 100;
+function getProgress ({ open_issues, closed_issues }) {
+	return (closed_issues / (open_issues + closed_issues)) * 100;
+	// let total = milestone.node.issues.edges.length;
+	// let closed = milestone.node.issues.edges.reduce((total, issue) => {
+	// 	return issue.node.closed ? total += 1 : total
+	// }, 0);
+	// return (closed / total) * 100;
 }
 
 function getAssignees (milestone) {
 	let assignees = [];
-	let ids = new Map();
+	// let ids = new Map();
 
-	milestone.node.issues.edges.forEach(issue => {
-		issue.node.assignees.edges.forEach(assignee => {
-			let id = assignee.node.id; 
-			if (!ids.has(id)) {
-				ids.set(id, true);
-				assignees.push(assignee.node);
-			}
-		});
-	});
+	// milestone.node.issues.edges.forEach(issue => {
+	// 	issue.node.assignees.edges.forEach(assignee => {
+	// 		let id = assignee.node.id; 
+	// 		if (!ids.has(id)) {
+	// 			ids.set(id, true);
+	// 			assignees.push(assignee.node);
+	// 		}
+	// 	});
+	// });
 
 
 
@@ -131,27 +130,27 @@ function getAssignees (milestone) {
 function getClass (milestone) {
 	let today = moment();
 	let colorClass;
-	if (milestone.node.closed)
+	console.log(milestone.state)
+	if (milestone.state === 'closed')
 		colorClass = 'closed';
-	else if (moment(milestone.node.dueOn).isBefore(today))
+	else if (moment(milestone.due_on).isBefore(today))
 		colorClass = 'stale';
 	else
 		colorClass = 'open';
-
-	return `${colorClass} ${milestone.node.id}`
+	return `${colorClass} gh-id-${milestone.id}`
 }
 
 function getDescription (milestone) {
-	return milestone.node.description.split('\n').filter(line => !line.includes('starts')).join(' ');
+	return milestone.description.split('\n').filter(line => !line.includes('starts')).join(' ');
 }
 
 function getId (milestone) {
-	return String(milestone.node.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
+	return String(milestone.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
 }
 
 function setTooltips (tasks) {
 	tasks.forEach(task => {
-		tippy(`.${task.id}`, {
+		tippy(`.gh-id-${task.id}`, {
 			content: makeCardTemplate(task),
 			animateFill: false,
 			theme: 'light',

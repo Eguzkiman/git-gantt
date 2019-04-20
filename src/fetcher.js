@@ -8,10 +8,10 @@ const ghAxios = axios.create({
 });
 
 export const getAllRepos = () => 
-	ghAxios(`/user/repos`);
+	ghAxios(`/user/repos?per_page=100`);
 
 
 export const getMilestonesByRepo = (params) => 
-	ghAxios(`/repos/${params.owner.login}/${params.name}/milestones`)
+	ghAxios(`/repos/${params.owner.login}/${params.name}/milestones?state=all`)
 
 export default ghAxios;

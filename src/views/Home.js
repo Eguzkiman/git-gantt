@@ -17,7 +17,7 @@ export default function Home (props) {
 		let repos = await getAllRepos();
 		let milestonesByRepo = await Promise.all(repos.data.map(repo => getMilestonesByRepo(repo)));
 		let milestones = flattenArray(milestonesByRepo.map(i => i.data));
-		return milestones
+		return milestones;
 	}
 
 	return (
@@ -40,15 +40,15 @@ export default function Home (props) {
 				return (
 					<div>
 						<Navbar/>
-						{data.map(repo => (
-							<p key={repo.id}>{repo.title}</p>
-						))}
+						<Gantt
+							data={data}
+						/>
 					</div>
 				);
-						// <Gantt
-						// 	repositories={data.viewer.repositories}
-						// />
 			}}
 		</Query>
 	);
 }
+						// {data.map(repo => (
+						// 	<p key={repo.id}>{repo.title}</p>
+						// ))}

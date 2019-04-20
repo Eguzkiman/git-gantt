@@ -130,7 +130,6 @@ function getAssignees (milestone) {
 function getClass (milestone) {
 	let today = moment();
 	let colorClass;
-	console.log(milestone.state)
 	if (milestone.state === 'closed')
 		colorClass = 'closed';
 	else if (moment(milestone.due_on).isBefore(today))

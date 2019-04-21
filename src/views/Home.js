@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Gantt from 'components/gantt';
 import Navbar from 'components/navbar';
@@ -8,7 +8,8 @@ import flattenArray from 'utils/flatten-array';
 
 import {
 	getAllRepos,
-	getMilestonesByRepo
+	getMilestonesByRepo,
+	updateMilestone
 } from 'fetcher';
 
 export default function Home (props) {
@@ -18,6 +19,10 @@ export default function Home (props) {
 		let milestonesByRepo = await Promise.all(repos.data.map(repo => getMilestonesByRepo(repo)));
 		let milestones = flattenArray(milestonesByRepo.map(i => i.data));
 		return milestones;
+	}
+
+	async function onDateChange (milestone) {
+		updateMilestone(milestone)
 	}
 
 	return (
@@ -41,6 +46,7 @@ export default function Home (props) {
 					<div>
 						<Navbar/>
 						<Gantt
+							onDateChange={onDateChange}
 							data={data}
 						/>
 					</div>
@@ -49,6 +55,3 @@ export default function Home (props) {
 		</Query>
 	);
 }
-						// {data.map(repo => (
-						// 	<p key={repo.id}>{repo.title}</p>
-						// ))}

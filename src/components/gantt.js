@@ -8,31 +8,37 @@ import 'tippy.js/themes/light.css'
 export default function MilestoneGantt (props) {
 	let tasks = [];
 
-	// props.repositories.forEach(repo => {
-		props.data.forEach(milestone => {
-			tasks.push({
-				id: getId(milestone),
-				name: /*repo.node.name + ' | ' +*/ milestone.title,
-				start: getStart(milestone),
-				end: milestone.due_on,
-				url: milestone.url,
-				progress: getProgress(milestone),
-				custom_class: getClass(milestone),
-				description: getDescription(milestone),
-				assignees: getAssignees(milestone)
-			})
-		});
-	// });
+	props.data.forEach(milestone => {
+		tasks.push({
+			id: getId(milestone),
+			name: /*repo.node.name + ' | ' +*/ milestone.title,
+			start: getStart(milestone),
+			end: milestone.due_on,
+			url: milestone.url,
+			progress: getProgress(milestone),
+			custom_class: getClass(milestone),
+			description: getDescription(milestone),
+			assignees: getAssignees(milestone)
+		})
+	});
+
 	if (!tasks.length) return (<p>You have no milestones available!</p>);
 
 	let gantt;
 
-	setTimeout(function () {
+	setTimeout(() => {
 		const id = '#Gantt';
 		gantt = new Gantt(id, tasks, {
 			custom_popup_html: () => '',
 			on_click: task => window.open(task.url),
 			on_date_change: (task, start, end) => {
+				let updatedMilestone = {
+					title: task.name,
+					description: addDateToDescription(task.description, start),
+					due_on: moment(end).format('YYYY-MM-DD'),
+					url: task.url
+				}
+				props.onDateChange(updatedMilestone);
 			},
 			on_view_change: function() {
 				setTooltips(tasks);
@@ -56,7 +62,7 @@ export default function MilestoneGantt (props) {
 			<button className="square" onClick={() => gantt.change_view_mode('Half Day')}>Half Day</button>*/}
 			<button className="square" onClick={() => gantt.change_view_mode('Day')}>Day</button>
 			<button className="square" onClick={() => gantt.change_view_mode('Week')}>Week</button>
-			<button className="square" onClick={() => gantt.change_view_mode('Month')}>Month</button>			
+			<button className="square" onClick={() => gantt.change_view_mode('Month')}>Month</button>
 		</div>
 	);
 }
@@ -141,6 +147,12 @@ function getClass (milestone) {
 
 function getDescription (milestone) {
 	return milestone.description.split('\n').filter(line => !line.includes('starts')).join(' ');
+}
+
+function addDateToDescription (description, date) {
+	// frappe-gantt returns dates with daylight savings.
+	let d = moment(date).add(3, 'hours').startOf('day').format('YYYY-MM-DD');
+	return `${description} \n starts:${d}`;
 }
 
 function getId (milestone) {

@@ -11,7 +11,7 @@ export default function MilestoneGantt (props) {
 	props.data.forEach(milestone => {
 		tasks.push({
 			id: getId(milestone),
-			name: /*repo.node.name + ' | ' +*/ milestone.title,
+			name: milestone.repo.name + ' | ' + milestone.title,
 			start: getStart(milestone),
 			end: milestone.due_on,
 			url: milestone.url,

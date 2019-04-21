@@ -16,9 +16,12 @@ export default function Home (props) {
 
 	async function getData () {
 		let repos = await getAllRepos();
-		let milestonesByRepo = await Promise.all(repos.data.map(repo => getMilestonesByRepo(repo)));
-		let milestones = flattenArray(milestonesByRepo.map(i => i.data));
-		return milestones;
+		let milestonesByRepo = await Promise.all(repos.data.map(repo => 
+			getMilestonesByRepo(repo).then(milestones => 
+				milestones.data.map(milestone => ({ ...milestone, repo }))
+			)
+		));
+		return flattenArray(milestonesByRepo);
 	}
 
 	async function onDateChange (milestone) {

@@ -11,10 +11,12 @@ export default function MilestoneGantt (props) {
 	props.data.forEach(milestone => {
 		tasks.push({
 			id: getId(milestone),
+			title: milestone.title,
 			name: milestone.repo.name + ' | ' + milestone.title,
 			start: getStart(milestone),
 			end: milestone.due_on,
 			url: milestone.url,
+			html_url: milestone.html_url,
 			progress: getProgress(milestone),
 			custom_class: getClass(milestone),
 			description: getDescription(milestone),
@@ -30,10 +32,10 @@ export default function MilestoneGantt (props) {
 		const id = '#Gantt';
 		gantt = new Gantt(id, tasks, {
 			custom_popup_html: () => '',
-			on_click: task => window.open(task.url),
+			on_click: task => window.open(task.html_url),
 			on_date_change: (task, start, end) => {
 				let updatedMilestone = {
-					title: task.name,
+					title: task.title,
 					description: addDateToDescription(task.description, start),
 					due_on: moment(end).format('YYYY-MM-DD'),
 					url: task.url

@@ -7,10 +7,10 @@ const ghAxios = axios.create({
 	baseURL: GITHUB_HOST
 });
 
-export const getAllRepos = () => 
+export const fetchAllRepos = () => 
 	ghAxios(`/user/repos?per_page=100`);
 
-export const getMilestonesByRepo = params => 
+export const fetchMilestonesByRepo = params => 
 	// Adds a timestamp to prevent browser cache
 	ghAxios(`/repos/${params.owner.login}/${params.name}/milestones?state=all&timestamp=${new Date().getTime()}`)
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
 import Gantt from 'components/gantt';
 import Navbar from 'components/navbar';
@@ -7,17 +8,17 @@ import Query from "containers/query";
 import flattenArray from 'utils/flatten-array';
 
 import {
-	getAllRepos,
-	getMilestonesByRepo,
+	fetchAllRepos,
+	fetchMilestonesByRepo,
 	updateMilestone
 } from 'fetcher';
 
-export default function Home (props) {
+function Home (props) {
 
 	async function getData () {
-		let repos = await getAllRepos();
+		let repos = await fetchAllRepos();
 		let milestonesByRepo = await Promise.all(repos.data.map(repo => 
-			getMilestonesByRepo(repo).then(milestones => 
+			fetchMilestonesByRepo(repo).then(milestones => 
 				milestones.data.map(milestone => ({ ...milestone, repo }))
 			)
 		));
@@ -58,3 +59,16 @@ export default function Home (props) {
 		</Query>
 	);
 }
+
+function stateToProps (state) {
+	return {};
+}
+
+function dispatchToProps (dispatch) {
+	return {};
+}
+
+export default connect(
+	stateToProps,
+	dispatchToProps
+)(Home);

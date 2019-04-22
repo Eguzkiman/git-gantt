@@ -6,25 +6,21 @@ import tippy from 'tippy.js';
 import 'tippy.js/themes/light.css'
 
 export default function MilestoneGantt (props) {
-	let tasks = [];
+	if (!props.data.length) return (<p>You have no milestones available!</p>);
 
-	props.data.forEach(milestone => {
-		tasks.push({
-			id: getId(milestone),
-			title: milestone.title,
-			name: milestone.repo.name + ' | ' + milestone.title,
-			start: getStart(milestone),
-			end: milestone.due_on,
-			url: milestone.url,
-			html_url: milestone.html_url,
-			progress: getProgress(milestone),
-			custom_class: getClass(milestone),
-			description: getDescription(milestone),
-			assignees: getAssignees(milestone)
-		})
-	});
-
-	if (!tasks.length) return (<p>You have no milestones available!</p>);
+	let tasks = props.data.map(milestone => ({
+		id: getId(milestone),
+		title: milestone.title,
+		name: milestone.repo.name + ' | ' + milestone.title,
+		start: getStart(milestone),
+		end: milestone.due_on,
+		url: milestone.url,
+		html_url: milestone.html_url,
+		progress: getProgress(milestone),
+		custom_class: getClass(milestone),
+		description: getDescription(milestone),
+		assignees: getAssignees(milestone)
+	}));
 
 	let gantt;
 

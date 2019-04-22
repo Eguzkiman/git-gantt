@@ -18,10 +18,12 @@
 	fill: #FE7F77;
 }
 
+.gantt .closed.active.bar-wrapper .bar,
 .gantt .closed.active.bar-wrapper .bar-progress,
 .gantt .closed.bar-wrapper:hover .bar-progress {
 	fill: #82D173;
 }
+.gantt .closed .bar,
 .gantt .closed .bar-progress {
 	fill: #92E183;
 }

@@ -9,6 +9,10 @@ script:
 - npm run build
 deploy:
   provider: heroku
+  branches:
+    only:
+      - develop
+      - release
   api_key:
     secure: MnaQ61mPCb0PV2FwEBY5kvyhrSSkzj+Psf4DIg686pajLUODcxALdIKAbyXFy368Qz+W5srWcEELzg9dD1uydRCTA7yKldsL7hhePKvv3D3X4wpRXQu5lIiAlm3iaXXs8JNS0ZioqltJic46LJH/t3zvB3sjPHIgagkqOBDFvhIlc3oA4Iz73O+2F9CZGhXlKLL8FhvIkUu6DgZc+fTSFxlb+am/Fd1bBP3u10Knij5w/k5+J726Qz8NGVSCbLX7TT3vmX4+0MwJkQy6dD5yCUJX3sgX46yZ2E6DK9eERYtcP59dTwj68D+qOFzVcjszRdpRUo9bzQHLeH1mQg6tuOkPs+j6I5jj6i8EsJfruzQeFqX1IrzeCIQ5JPZToY21m/SCyznzXcC/ObFk60Oms9Rj+EhpdMQwz77VoMcxcRbCSr/3X+eti6i8e5u30CtV1w1INQFweGmlVJ2NNTzDNXdnpbXq/CT4tbvH1HuZZGNnA7OwzqPxtHj0MTo2w9o0eFFNINUrPdyG0djqu5utnvh5xal+j5aUuFCSpQsYD6XgDrVUOHNyTNxnpfQPvzK7WDxUni1FXvSfl6WhaypYHZ4r9/VHukRu+G3j6P6R+qkr7rjurfi8leQE6xoEd2zkvzQAlgQXy0ZnNCXC4vUNBNJ821+VlSEqpRLcDWYqDDM=
 on:

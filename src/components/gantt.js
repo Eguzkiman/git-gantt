@@ -109,11 +109,6 @@ function makeCardTemplate (data) {
 
 function getProgress ({ open_issues, closed_issues }) {
 	return (closed_issues / (open_issues + closed_issues)) * 100;
-	// let total = milestone.node.issues.edges.length;
-	// let closed = milestone.node.issues.edges.reduce((total, issue) => {
-	// 	return issue.node.closed ? total += 1 : total
-	// }, 0);
-	// return (closed / total) * 100;
 }
 
 function getAssignees (milestone) {

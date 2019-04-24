@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr';
+import { RepoSchema } from 'schemas';
 
 import * as fetcher from 'fetcher';
 
@@ -9,11 +10,13 @@ export function fetchAllRepos () {
 		return fetcher.fetchAllRepos()
 			.then(
 				result => {
-					console.log(result);
+					let normalized = normalize(result.data, [RepoSchema]);
+					let byId = normalized.entities.repo;
+					let allIds = normalized.result;
+					dispatch(addRepos({ byId, allIds }));
 				},
 				error => {
-					// ...
-					throw({ error, message: 'Failed to fetch all repos' });
+					throw error;
 				}
 			);
 	}

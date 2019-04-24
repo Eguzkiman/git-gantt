@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
-export default function (props) {
+function Query (props) {
 
+	let data = props.data;
 	let [error, setError] = useState(null);
 	let [loading, setLoading] = useState(false);
-	let [data, setData] = useState([]);
 
 	useEffect(() => {
 		fetch();
@@ -14,8 +15,7 @@ export default function (props) {
 		setError(null);
 		setLoading(true);
 		try {
-			let data = await props.query();
-			setData(data);
+			await props.doQuery();
 			setLoading(false);
 		} catch (e) {
 			setError(e);
@@ -24,5 +24,18 @@ export default function (props) {
 		}
 	}
 	
-	return props.children({error, loading, data});
+	return props.children({ error, loading, data });
 }
+
+const stateToProps = (state, ownProps) => ({
+	data: ownProps.selector(state),
+});
+
+const dispatchToProps = (dispatch, ownProps) => ({
+	doQuery: () => dispatch(ownProps.query())
+});
+
+export default connect(
+	stateToProps,
+	dispatchToProps
+)(Query);

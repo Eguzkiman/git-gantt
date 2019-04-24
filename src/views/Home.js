@@ -7,30 +7,19 @@ import Navbar from 'components/navbar';
 import Query from "containers/query";
 import flattenArray from 'utils/flatten-array';
 
-import {
-	fetchAllRepos,
-	fetchMilestonesByRepo,
-	updateMilestone
-} from 'fetcher';
+// import { fetchAllRepos } from 'actions/repos';
+import { fetchAllMilestones } from 'actions/milestones';
 
-function Home (props) {
+import { getAllMilestones } from 'selectors/milestones';
 
-	async function getData () {
-		let repos = await fetchAllRepos();
-		let milestonesByRepo = await Promise.all(repos.data.map(repo => 
-			fetchMilestonesByRepo(repo).then(milestones => 
-				milestones.data.map(milestone => ({ ...milestone, repo }))
-			)
-		));
-		return flattenArray(milestonesByRepo);
-	}
+export default function Home (props) {
 
 	async function onDateChange (milestone) {
-		updateMilestone(milestone)
+		// updateMilestone(milestone)
 	}
 
 	return (
-		<Query query={getData}>
+		<Query query={fetchAllMilestones} selector={getAllMilestones}>
 			{({ loading, error, data }) => {
 				if (loading) return (
 					<div>
@@ -60,15 +49,22 @@ function Home (props) {
 	);
 }
 
-function stateToProps (state) {
-	return {};
-}
+// function stateToProps (state, ownProps) {
+// 	return {
+// 		selectedData: getAllMilestones(state)
+// 	}
+// }
 
-function dispatchToProps (dispatch) {
-	return {};
-}
+// function dispatchToProps (dispatch) {
+// 	return {
+// 		async fetchData () {
+// 			await dispatch(fetchAllRepos());
+// 			await dispatch(fetchMilestonesOfAllRepos());
+// 		}
+// 	};
+// }
 
-export default connect(
-	stateToProps,
-	dispatchToProps
-)(Home);
+// export default connect(
+// 	stateToProps,
+// 	dispatchToProps
+// )(Home);

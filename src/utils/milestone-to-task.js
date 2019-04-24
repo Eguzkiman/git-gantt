@@ -4,7 +4,7 @@ export default function milestoneToTask (milestone) {
 	let task = {
 		id: getId(milestone),
 		title: milestone.title,
-		name: milestone.repo.name + ' | ' + milestone.title,
+		name: getName(milestone),
 		start: getStart(milestone),
 		end: milestone.due_on,
 		url: milestone.url,
@@ -42,6 +42,12 @@ function getAssignees (milestone) {
 	return assignees;
 }
 
+function getName (milestone) {
+	let repoName = milestone.repo.name;
+	let title = milestone.title;
+	return repoName ? (repoName + ' | ' + title) : title;
+}
+
 function getClass (milestone) {
 	let today = moment();
 	let colorClass;
@@ -54,17 +60,17 @@ function getClass (milestone) {
 	return `${colorClass} gh-id-${milestone.id}`
 }
 
-function getDescription (milestone) {
-	return milestone.description.split('\n').filter(line => !line.includes('starts')).join(' ');
+function getDescription ({description=''}) {
+	return description.split('\n').filter(line => !line.includes('starts')).join(' ');
 }
 
 function getId (milestone) {
 	return String(milestone.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
 }
 
-function getStart (milestone) {
+function getStart ({description='', created_at}) {
 	let validKeys = ['starts', 'start', 'begins'];
-	let lines = milestone.description.split('\n');
+	let lines = description.split('\n');
 
 	for (let i in lines) {
 		let [key, val] = lines[i].split(':');
@@ -74,5 +80,5 @@ function getStart (milestone) {
 		}
 	};
 
-	return milestone.created_at;
+	return created_at;
 }

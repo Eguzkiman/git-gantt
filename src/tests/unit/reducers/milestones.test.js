@@ -1,7 +1,7 @@
 import reducer from 'reducers/milestones'
 
 import {
-	ADD_MILESTONE
+	ADD_MILESTONES
 } from 'actions/milestones'
 
 const initialState = {
@@ -21,7 +21,8 @@ const sampleState = {
 const samplePayload = {
 	byId: {
 		4: { id: 4, name: "Something new!" } 
-	}
+	},
+	allIds: [4]
 }
 
 // This one should have an item already existing in sampleState
@@ -38,10 +39,10 @@ describe('milestones reducer', () => {
 		const expected = initialState;
 		expect(actual).toEqual(expected)
 	});
-	describe('ADD_MILESTONE', () => {
+	describe('ADD_MILESTONES', () => {
 		describe('when just adding items', () => {
 			const action = {
-				type: ADD_MILESTONE,
+				type: ADD_MILESTONES,
 				payload: samplePayload
 			};
 			const result = reducer(sampleState, action);
@@ -57,7 +58,7 @@ describe('milestones reducer', () => {
 		});
 		describe('when overwriting items', () => {
 			const action = {
-				type: ADD_MILESTONE,
+				type: ADD_MILESTONES,
 				payload: overwritingPayload
 			};
 			const result = reducer(sampleState, action);

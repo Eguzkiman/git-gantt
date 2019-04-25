@@ -106,6 +106,35 @@ describe('milestone to task util', () => {
 		});
 	});
 
+	describe('resulting id value', () => {
+		it('escapes special characters', () => {
+			let id = 'thisisatést&ohyeah==';
+			let actual = milestoneToTask({ id }).id;
+			let expected = 'thisisatést\\&ohyeah\\=\\=';
+
+			expect(actual).toEqual(expected);
+		})
+	});
+
+	describe('resulting start', () => {
+		it("defaults to milestone's created_at", () => {
+			let description = 'only a description';
+			let created_at = "2019-02-26T16:11:03Z";
+			let actual = milestoneToTask({ description, created_at }).start;
+			let expected = "2019-02-26T16:11:03Z";
+			
+			expect(actual).toEqual(expected);
+		});
+		it("prefers description's gantt_start before milestone's created_at", () => {
+			let description = 'only a description\ngantt_starts:2019-01-01';
+			let created_at = "2019-02-26T16:11:03Z";
+			let actual = milestoneToTask({ description, created_at }).start;
+			let expected = moment('2019-01-01').toISOString();
+
+			expect(actual).toEqual(expected);
+		});
+	});
+
 	describe('resulting description value', () => {
 		it('filters out lines with a gantt_starts token', () => {
 			let description = 'oh yeah!\nSomething awesome starts now!\nit gantt_starts:2019-01-01';

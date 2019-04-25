@@ -12,10 +12,12 @@ import { fetchAllMilestones } from 'actions/milestones';
 
 import { getAllMilestones } from 'selectors/milestones';
 
+import { updateMilestone } from 'fetcher';
+
 export default function Home (props) {
 
 	async function onDateChange (milestone) {
-		// updateMilestone(milestone)
+		updateMilestone(milestone)
 	}
 
 	return (

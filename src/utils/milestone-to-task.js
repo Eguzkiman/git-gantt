@@ -42,9 +42,8 @@ function getAssignees (milestone) {
 	return assignees;
 }
 
-function getName (milestone) {
-	let repoName = milestone.repo.name;
-	let title = milestone.title;
+function getName ({repo, title}) {
+	let repoName = repo && repo.name;
 	return repoName ? (repoName + ' | ' + title) : title;
 }
 
@@ -60,16 +59,16 @@ function getClass (milestone) {
 	return `${colorClass} gh-id-${milestone.id}`
 }
 
-function getDescription ({description=''}) {
-	return description.split('\n').filter(line => !line.includes('starts')).join(' ');
+function getId(milestone) {
+	return String(milestone.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1');
 }
 
-function getId (milestone) {
-	return String(milestone.id).replace(/([ #;&,.+*~':"!^$[\]()=>|/@])/g,'\\$1')
+function getDescription ({description=''}) {
+	return description.split('\n').filter(line => !line.includes('gantt_starts')).join('\n');
 }
 
 function getStart ({description='', created_at}) {
-	let validKeys = ['starts', 'start', 'begins'];
+	let validKeys = ['gantt_starts'];
 	let lines = description.split('\n');
 
 	for (let i in lines) {

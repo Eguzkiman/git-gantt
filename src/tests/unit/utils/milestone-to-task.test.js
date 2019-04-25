@@ -1,5 +1,7 @@
 import milestoneToTask from 'utils/milestone-to-task';
 
+import moment from 'moment';
+
 let sampleMilestone = {
 	url: 'https://api.github.com/repos/kioru/saeko-v2/milestones/1',
 	html_url: 'https://github.com/kioru/saeko-v2/milestone/1',
@@ -47,21 +49,71 @@ let sampleMilestoneWithRepo = {
 };
 
 describe('milestone to task util', () => {
-	it('returns a valid frappe-gantt task', () => {
-		let actual = milestoneToTask(sampleMilestone);
-		expect(actual).toHaveProperty('id');
-		expect(actual).toHaveProperty('name');
-		expect(actual).toHaveProperty('start');
-		expect(actual).toHaveProperty('end');
-		expect(actual).toHaveProperty('progress');
-	});
-
 	describe('when passed a milestone with an embedded repo', () => {
+		let milestone = sampleMilestoneWithRepo;
+		it('returns a valid frappe-gantt task', () => {
+			let actual = milestoneToTask(milestone);
+			expect(actual).toHaveProperty('id');
+			expect(actual).toHaveProperty('name');
+			expect(actual).toHaveProperty('start');
+			expect(actual).toHaveProperty('end');
+			expect(actual).toHaveProperty('progress');
+		});
 		it('returns a task whose name key contains the repo name', () => {
-			let actual = milestoneToTask(sampleMilestoneWithRepo).name;
-			let expected = `${sampleMilestoneWithRepo.repo.name} | ${sampleMilestoneWithRepo.title}`;
+			let actual = milestoneToTask(milestone).name;
+			let expected = `${milestone.repo.name} | ${milestone.title}`;
 
 			expect(actual).toEqual(expected);
+		});
+		it('calculates progress correctly', () => {
+			let actual = milestoneToTask({
+				open_issues: 20,
+				closed_issues: 20
+			}).progress;
+
+			let expected = 50;
+
+			expect(actual).toEqual(expected);
+		});
+	});
+
+	describe("resulting color_class value", () => {
+		it('chooses the closed class when passed a closed milestone', () => {
+			let actual = milestoneToTask({ state: 'closed' }).custom_class;
+			let expected = 'closed';
+
+			expect(actual).toMatch(expected);
+		});
+		it('chooses the stale class when passed a stale milestone', () => {
+			let due_on = moment().subtract(1, 'day');
+			let actual = milestoneToTask({ due_on }).custom_class;
+			let expected = 'stale';
+
+			expect(actual).toMatch(expected);
+		});
+		it('chooses the open class when passed a open milestone', () => {
+			let due_on = moment().add(1, 'day');
+			let actual = milestoneToTask({ due_on }).custom_class;
+			let expected = 'open';
+
+			expect(actual).toMatch(expected);
+		});
+		it('includes a gh-id class', () => {
+			let actual = milestoneToTask({ id: 1337 }).custom_class;
+			let expected = 'gh-id-1337';
+
+			expect(actual).toMatch(expected);
+		});
+	});
+
+	describe('resulting description value', () => {
+		it('filters out lines with a gantt_starts token', () => {
+			let description = 'oh yeah!\nSomething awesome starts now!\nit gantt_starts:2019-01-01';
+			let actual = milestoneToTask({ description }).description;
+			let expected = 'oh yeah!\nSomething awesome starts now!';
+
+			expect(actual).toEqual(expected);
+
 		});
 	});
 

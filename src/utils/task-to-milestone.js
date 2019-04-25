@@ -14,5 +14,5 @@ export default function taskToMilestone (task, start, end) {
 function addDateToDescription (description, date) {
 	// frappe-gantt returns dates with daylight savings.
 	let d = moment(date).add(3, 'hours').startOf('day').format('YYYY-MM-DD');
-	return `${description} \n starts:${d}`;
+	return `${description} \n gantt_starts:${d}`;
 }

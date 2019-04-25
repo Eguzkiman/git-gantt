@@ -16,7 +16,7 @@ export default function ReposReducer (state = initialState, action) {
 			}
 			let allIds = [...new Set(state.allIds.concat(action.payload.allIds))];
 			
-			return { byId, allIds }
+			return { byId, allIds };
 		default:
 			return state;
 	}

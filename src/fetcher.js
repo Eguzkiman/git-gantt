@@ -2,19 +2,21 @@ import axios from 'axios';
 
 const GITHUB_HOST = "https://api.github.com";
 
-// Axios instance for GitHub
-const ghAxios = axios.create({
-	baseURL: GITHUB_HOST
-});
+// // Axios instance for GitHub
+// const ghAxios = axios.create({
+// 	baseURL: GITHUB_HOST
+// });
+
+axios.defaults.baseURL = GITHUB_HOST;
 
 export const fetchAllRepos = () => 
-	ghAxios(`/user/repos?per_page=100`);
+	axios.get(`/user/repos?per_page=100`);
 
 export const fetchMilestonesByRepo = params => 
 	// Adds a timestamp to prevent browser cache
-	ghAxios(`/repos/${params.owner.login}/${params.name}/milestones?state=all&timestamp=${new Date().getTime()}`)
+	axios.get(`/repos/${params.owner.login}/${params.name}/milestones?state=all&timestamp=${new Date().getTime()}`)
 
 export const updateMilestone = (newMilestone) =>
-	ghAxios.patch(newMilestone.url, newMilestone);
+	axios.patch(newMilestone.url, newMilestone);
 
-export default ghAxios;
+export default axios;

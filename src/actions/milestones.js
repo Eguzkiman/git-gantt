@@ -19,7 +19,6 @@ export function fetchMilestonesOfAllRepos () {
 	return async (dispatch, getState) => {
 		
 		let repos = getAllRepos(getState());
-
 		let promises = repos.map(repo => {
 			return fetcher.fetchMilestonesByRepo(repo).then(milestones => {
 				return milestones.data.map(milestone => ({...milestone, repo: repo.id}));
@@ -32,7 +31,7 @@ export function fetchMilestonesOfAllRepos () {
 					let milestones = result.flat();
 					let normalized = normalize(milestones, [MilestoneSchema]);
 					let byId = normalized.entities.milestone;
-					let allIds = normalized.result;
+					let allIds = [...new Set(normalized.result)];
 					dispatch(addMilestones({ byId, allIds }));
 				},
 				error => {

@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 
 import Gantt from 'components/gantt';
 import Navbar from 'components/navbar';
 
 import Query from "containers/query";
-import flattenArray from 'utils/flatten-array';
 
 // import { fetchAllRepos } from 'actions/repos';
 import { fetchAllMilestones } from 'actions/milestones';

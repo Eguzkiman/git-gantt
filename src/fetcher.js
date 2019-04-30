@@ -2,11 +2,6 @@ import axios from 'axios';
 
 const GITHUB_HOST = "https://api.github.com";
 
-// // Axios instance for GitHub
-// const ghAxios = axios.create({
-// 	baseURL: GITHUB_HOST
-// });
-
 axios.defaults.baseURL = GITHUB_HOST;
 
 export const fetchAllRepos = () => 

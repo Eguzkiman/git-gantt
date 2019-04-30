@@ -1,16 +1,23 @@
 import {
 	getNormalizedMilestones,
+	getAllMilestonesWithRepos,
 	getAllMilestones
 } from 'selectors/milestones';
 
 let state = {
 	milestones: {
 		byId: {
-			"1": {id: 1},
-			"2": {id: 2},
-			"3": {id: 3}
+			"1": {id: 1, repo: 4},
+			"2": {id: 2, repo: 4},
+			"3": {id: 3, repo: 4}
 		},
 		allIds: [1, 2, 3]
+	},
+	repos: {
+		byId: {
+			"4": {id: 4}
+		},
+		allIds: [4]
 	}
 };
 
@@ -25,7 +32,24 @@ describe("milestones selector's", () => {
 	describe('getAllMilestones', () => {
 		it('returns an array of objects', () => {
 			let actual = getAllMilestones(state);
-			let expected = [{id: 1}, {id:2}, {id: 3}];
+			let expected = [{id: 1, repo: 4}, {id: 2, repo: 4}, {id: 3, repo: 4}];
+			expect(actual).toEqual(expected);
+		});
+	});
+	describe('getAllMilestonesWithRepos', () => {
+		it('returns an array of milestones with a related repo', () => {
+			let actual = getAllMilestonesWithRepos(state);
+			let expected = [{
+				id: 1,
+				repo: { id: 4 }
+			},{
+				id: 2,
+				repo: { id: 4 }
+			},{
+				id: 3,
+				repo: { id: 4 }
+			}];
+
 			expect(actual).toEqual(expected);
 		});
 	});

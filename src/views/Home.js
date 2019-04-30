@@ -10,7 +10,7 @@ import flattenArray from 'utils/flatten-array';
 // import { fetchAllRepos } from 'actions/repos';
 import { fetchAllMilestones } from 'actions/milestones';
 
-import { getAllMilestones } from 'selectors/milestones';
+import { getAllMilestonesWithRepos } from 'selectors/milestones';
 
 import { updateMilestone } from 'fetcher';
 
@@ -21,7 +21,7 @@ export default function Home (props) {
 	}
 
 	return (
-		<Query query={fetchAllMilestones} selector={getAllMilestones}>
+		<Query query={fetchAllMilestones} selector={getAllMilestonesWithRepos}>
 			{({ loading, error, data }) => {
 				if (loading) return (
 					<div>

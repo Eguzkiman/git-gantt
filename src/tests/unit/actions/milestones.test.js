@@ -10,7 +10,7 @@ import {
 	fetchAllMilestones,
 	fetchAllRepos,
 	fetchMilestonesOfAllRepos,
-} from 'actions/milestones'
+} from 'actions/milestones';
 
 import {
 	ADD_REPOS

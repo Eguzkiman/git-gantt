@@ -1,5 +1,5 @@
 import React from 'react';
-import { Provider } from 'react-redux'
+import {StoreContext} from 'redux-react-hook';
 
 import 'App.css';
 
@@ -12,14 +12,14 @@ import Welcome from 'views/Welcome';
 
 function App (props) {
 	return (
-		<Provider store={store}>
+		<StoreContext.Provider value={store}>
 			<Auth>
 				{(token) => {
 					if (token) return <Home token={token}/>;
 					return <Welcome/>;
 				}}
 			</Auth>
-		</Provider>
+		</StoreContext.Provider>
 	);
 }
 

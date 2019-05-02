@@ -10,7 +10,7 @@ import milestoneToTask from 'utils/milestone-to-task';
 import taskToMilestone from 'utils/task-to-milestone';
 
 export default function MilestoneGantt (props) {
-	if (!props.data.length) return (<p>You have no milestones available!</p>);
+	if (!props.data || !props.data.length) return (<p>You have no milestones available!</p>);
 	let tasks = props.data.map(milestoneToTask);
 
 	let gantt = useRef();

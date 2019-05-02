@@ -18,6 +18,10 @@ export default function Home (props) {
 		updateMilestone(milestone)
 	}
 
+	async function onHover (milestone) {
+		console.log(milestone);
+	}
+
 	return (
 		<Query query={fetchAllMilestones} selector={getAllMilestonesWithRepos}>
 			{({ loading, error, data }) => {
@@ -40,6 +44,7 @@ export default function Home (props) {
 						<Navbar/>
 						<Gantt
 							onDateChange={onDateChange}
+							onHover={onHover}
 							data={data}
 						/>
 					</div>

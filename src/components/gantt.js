@@ -17,7 +17,7 @@ export default function MilestoneGantt (props) {
 
 	useEffect((newTasks) => {
 		if (gantt.current) {
-			setTooltips(newTasks);
+			updateTasks(newTasks, props);
 		}
 	}, ['tasks']);
 
@@ -26,9 +26,9 @@ export default function MilestoneGantt (props) {
 			custom_popup_html: () => '',
 			on_click: task => window.open(task.html_url),
 			on_date_change: (task, start, end) => props.onDateChange(taskToMilestone(task, start, end)),
-			on_view_change: () => setTooltips(tasks),
+			on_view_change: () => updateTasks(tasks, props),
 		});
-		setTooltips(tasks);
+		updateTasks(tasks, props);
 	}, []);
 	
 
@@ -64,13 +64,17 @@ function makeCardTemplate (data) {
 	`;
 }
 
-function setTooltips (tasks) {
+function updateTasks (tasks, { onHover }) {
 	tasks.forEach(task => {
-		tippy(`.gh-id-${task.id}`, {
+		var ghId = document.querySelector(`.gh-id-${task.id}`);
+		ghId.removeEventListener('mouseover', onHover);
+		ghId.addEventListener('mouseover', onHover, { once: true });
+		tippy(ghId, {
 			content: makeCardTemplate(task),
 			animateFill: false,
 			theme: 'light',
 			interactive: true
 		});
+
 	});
 }

@@ -14,4 +14,7 @@ export const fetchMilestonesByRepo = params =>
 export const updateMilestone = (newMilestone) =>
 	axios.patch(newMilestone.url, newMilestone);
 
+export const fetchIssuesByRepo = params => 
+	axios.get(`/repos/${params.owner.login}/${params.name}/issues`)
+
 export default axios;

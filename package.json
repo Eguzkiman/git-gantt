@@ -5,6 +5,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "frappe-gantt": "Eguzkiman/gantt#master",
+    "global": "^4.3.2",
+    "mockserver": "^3.0.0",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "normalizr": "^3.3.0",
@@ -23,6 +25,7 @@
   },
   "scripts": {
     "prestart": "node prestart",
+    "pretest": "node server",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -1,0 +1,26 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+
+[
+	{
+		"id": 1,
+		"owner": {
+			"login": "Eguzkiman",
+			"name": "awesomeness"
+		}
+	}, {
+		"id": 2,
+		"owner": {
+			"login": "Eguzkiman",
+			"name": "awesomeness"
+		}
+	}, {
+		"id": 3,
+		"owner": {
+			"login": "Eguzkiman",
+			"name": "awesomeness"
+		}
+	}
+]

@@ -54,26 +54,3 @@ describe("milestones selector's", () => {
 		});
 	});
 });
-
-/*
-describe('entries selectors', () => {
-
-	describe('getEntries', () => {
-
-		it('returns empty array when the state is empty', () => {
-
-		it('Returns the right ammount of items', () => {
-
-	describe('getEntriesGroupedByDay', () => {
-
-		it('returns empty array when the state is empty', () => {
-
-		describe('when the state is full', () => {
-
-			it('returns an array of objects', () => {
-
-			it('returns an array where each object has a date and a entries field', () => {
-
-			it('groups the entries of the same day', () => {
-
-*/

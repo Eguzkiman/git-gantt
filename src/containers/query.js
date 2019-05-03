@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { StoreContext, useMappedState, useDispatch } from 'redux-react-hook';
 
 export default function Query (props) {
-
-	const store = useContext(StoreContext);
 
 	const dispatch = useDispatch();
 	const data = useMappedState(props.selector);

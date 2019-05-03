@@ -38,5 +38,12 @@ describe('repos actions', () => {
 				expect(store.getActions()).toEqual(expectedActions)
 			})
 		});
+		it('Fails to get all repos', () => {
+			const store = mockStore(initialState);
+
+			return axios.get('/user/repos?error=500').catch((e) => {
+				expect(e.response.data.error).toEqual('500!!!')
+			})
+		});
 	});
 });

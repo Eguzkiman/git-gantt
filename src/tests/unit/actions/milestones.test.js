@@ -1,6 +1,5 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import axios from 'axios';
 
 const GITHUB_HOST = "https://api.github.com";
 
@@ -53,12 +52,6 @@ const initialState = {
 		allids: []
 	}
 }
-
-jest.mock('axios');
-
-axios.get.mockResolvedValue({
-	data: [{"id": 1},{"id": 2},{"id": 3}]
-});
 
 describe('milestones actions', () => {
 	describe('fetchMilestonesOfAllRepos thunk', () => {

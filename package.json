@@ -5,6 +5,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "frappe-gantt": "Eguzkiman/gantt#master",
+    "global": "^4.3.2",
+    "mockserver": "^3.0.0",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "normalizr": "^3.3.0",
@@ -25,8 +27,10 @@
     "prestart": "node prestart",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "pretest": "node server &",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "posttest": "kill $(lsof -t -i:9001)"
   },
   "eslintConfig": {
     "extends": "react-app"

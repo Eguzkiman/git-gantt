@@ -54,12 +54,6 @@ const initialState = {
 	}
 }
 
-jest.mock('axios');
-
-axios.get.mockResolvedValue({
-	data: [{"id": 1},{"id": 2},{"id": 3}]
-});
-
 describe('milestones actions', () => {
 	describe('fetchMilestonesOfAllRepos thunk', () => {
 		it('Adds repos and milestones', () => {

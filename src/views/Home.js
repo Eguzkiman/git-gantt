@@ -2,8 +2,10 @@ import React from 'react';
 
 import Gantt from 'components/gantt';
 import Navbar from 'components/navbar';
+import PublicNavbar from 'components/publicnavbar';
 
 import Query from "containers/query";
+
 
 // import { fetchAllRepos } from 'actions/repos';
 import { fetchAllMilestones } from 'actions/milestones';
@@ -46,7 +48,7 @@ export default function Home (props) {
 							onDateChange={onDateChange}
 							onHover={onHover}
 							data={data}
-						/>
+						/>						
 					</div>
 				);
 			}}

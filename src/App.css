@@ -1,3 +1,46 @@
+body{
+	margin: 0px;
+	color: #3F3A40;
+}
+
+a{
+	transition: color 0.5s ease-out;
+}
+
+h1,h2,p{
+	color: #3F3A40;
+}
+
+h1{
+	font-size: 42px;
+}
+h2{
+	font-size: 22px;
+}
+
+.containter{
+    max-width: 1200px;
+    margin: 0 auto!important;
+    padding: 8px;
+}
+
+.logo{
+	width: 139px;
+	height: 40px;	
+}
+
+.ggmenu{
+	display: flex;
+	height: 60px;
+	background: #FBFAFC;
+	flex-wrap: nowrap;
+}
+
+.option-menu > .active{
+	color: white;
+	background: #956BBA;
+}
+
 .bar-wrapper {
 	/*pointer-events: none;*/
 }
@@ -45,6 +88,10 @@
 	align-items: center;
 }
 
+.h-center{
+	justify-content:center;
+}
+
 .gantt .today-highlight{
 	fill: #efdd82!important;
 }
@@ -81,3 +128,228 @@ button:focus {outline:0;}
 	overflow: hidden;
 	text-align: left;
 }
+
+/* Option menu Docs - Tutorials */
+.app-menu{
+	list-style: none;
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;;
+
+	-webkit-flex-flow: row wrap;
+	justify-content: flex-end;
+	
+}
+
+.app-menu a {
+	color: #3F3A40;
+	text-decoration: none;
+	display: block;
+	padding: .5em;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 17px;
+}
+
+/* Option menu Milestone - Proyects */
+.option-menu{
+	list-style: none;
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: inline-flex;;
+
+	-webkit-flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+
+	border: 1px solid #956BBA;
+	border-radius: 5px 5px 5px 5px;
+
+	padding: 0px;
+    margin: 0px;
+    background: white;
+    font-size: 14px;
+}
+
+.option-menu a {
+	text-decoration: none;
+	display: block;
+	padding: .5em;
+}
+
+.option-menu a:hover {
+	color: white;
+	background: rgba(149, 107, 186, 0.50);
+}
+
+.option-menu li .active{
+	color: white;
+    background: #956BBA;
+}
+
+/* Website - Homepage */
+
+.public-navbar{
+	display: flex;
+	height: 60px;	
+	flex-wrap: nowrap;
+}
+
+.website-menu{
+	list-style: none;
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;;
+
+	-webkit-flex-flow: row wrap;
+	justify-content: flex-end;
+	
+}
+
+.website-menu a {
+	color: #956BBA;
+	text-decoration: none;
+	display: block;
+	padding: .5em 1em;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 17px;
+}
+
+.section1{
+	display: flex;
+	padding: 2rem 0;
+	justify-content: space-around;
+}
+
+.title{
+	color: #3F3A40;
+}
+
+.subtitle{
+	color: #7A737E;
+	font-size: 22px;
+	line-height: 26px;	
+}
+
+.section2{
+	display: flex;
+	justify-content: space-around;
+	padding: 2rem 0;
+}
+
+.box{
+	width: 25%;
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px 0 rgba(186, 186, 186, 0.35);
+    margin: 5px;
+    padding: 20px;
+    text-align: center;
+}
+
+.button-primary{
+	color: white;
+	background: #76D16D;
+	border: 1px solid #76D16D;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1;
+	text-decoration: none;
+	animation: dark-shadow-pulse 1.5s infinite;
+}
+
+.button-primary:hover{
+	animation: dark-shadow-pulse 1.5s infinite;
+}
+
+.button-link:hover{
+	color: white;
+	background:#76D16D;
+}
+
+.button-link{
+	color: #76D16D;
+	border: 1px solid #76D16D;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1;
+	text-decoration: none;
+}
+
+.signup{
+	color: white!important;
+	background: #956BBA;
+	border-radius: 5px;
+}
+
+/* Reposive design */
+
+@media all and (max-width: 850px) {
+	h1{
+		font-size: 22px;
+	}
+	h2{
+		font-size: 12px;
+	}
+	p{
+		font-size: 10px;
+	}
+	.section1, .section2{
+		flex-wrap: wrap;
+		padding: 2rem 0;
+	}
+
+	.section1 img{
+		width: 350px;
+	}
+
+	.boxTitle{
+		padding: 2rem 0;
+	}
+
+	.box{
+		width: 60%;
+	}
+
+	.subtitle{
+		font-size: 12px;
+	}
+
+	.option-menu {
+		justify-content: center;
+	}
+}
+
+@media all and (max-width: 600px) {
+  .option-menu {
+    -webkit-flex-flow: column wrap;
+    flex-flow: column wrap;
+    padding: 0;
+  }
+  
+  .option-menu a { 
+    text-align: center; 
+    padding: 10px;
+    border-top: 1px solid rgba(255,255,255,0.3); 
+    border-bottom: 1px solid rgba(0,0,0,0.1); 
+  }
+  
+  .option-menu li:last-of-type a {
+    border-bottom: none;
+  }
+}
+
